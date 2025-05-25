@@ -14,6 +14,8 @@ An enhanced version of the classic Pong Wars game with individual ball speed con
 - Watch as Day (light) and Night (dark) territories battle for dominance
 - Click Reset to restart the game at any time
 
+## 🚀 Play Online
+[Live Demo](https://nursultantilek.github.io/pong-wars/)
 
 ## 📚 Credits & Inspiration
 - **Original Code:** [Koen van Gilst - Pong Wars](https://github.com/vnglst/pong-wars)
