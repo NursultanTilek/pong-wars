@@ -2,16 +2,12 @@
 <html>
   <head>
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>Pong wars | Koen van Gilst</title>
+    <title>Pong Wars with Speed Control</title>
     <meta
       name="description"
-      content="The eternal battle between day and night, good and bad. Written in JavaScript with some HTML & CSS in one index.html. Feel free to reuse the code and create your own version."
+      content="The eternal battle between day and night, good and bad. Now with individual ball speed controls!"
     />
-    <link rel="canonical" href="https://pong-wars.koenvangilst.nl/" />
-    <link rel="author" href="https://koenvangilst.nl" />
     <meta name="theme-color" content="#172B36" />
-    <meta name="creator" content="Koen van Gilst" />
-    <script defer data-domain="pong-wars.koenvangilst.nl" src="https://plausible.koenvangilst.nl/js/script.js"></script>
     <style>
       html {
         height: 100%;
@@ -25,6 +21,7 @@
         justify-content: center;
         align-items: center;
         background: linear-gradient(to bottom, #172b36 0%, #d9e8e3 100%);
+        font-family: monospace;
       }
 
       #container {
@@ -45,25 +42,106 @@
         box-shadow: 0 0 20px rgba(0, 0, 0, 0.2);
       }
 
+      #controls {
+        display: flex;
+        gap: 30px;
+        margin-top: 20px;
+        padding: 20px;
+        background: rgba(255, 255, 255, 0.1);
+        border-radius: 8px;
+        backdrop-filter: blur(10px);
+      }
+
+      .speed-control {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 10px;
+      }
+
+      .speed-control label {
+        font-size: 12px;
+        color: #172b36;
+        font-weight: bold;
+        text-align: center;
+      }
+
+      .day-label {
+        color: #114C5A;
+      }
+
+      .night-label {
+        color: #D9E8E3;
+        text-shadow: 1px 1px 2px rgba(0,0,0,0.5);
+      }
+
+      .speed-slider {
+        width: 80px;
+        height: 4px;
+        border-radius: 2px;
+        background: #ddd;
+        outline: none;
+        cursor: pointer;
+      }
+
+      .speed-slider::-webkit-slider-thumb {
+        appearance: none;
+        width: 16px;
+        height: 16px;
+        border-radius: 50%;
+        background: #172b36;
+        cursor: pointer;
+      }
+
+      .speed-slider::-moz-range-thumb {
+        width: 16px;
+        height: 16px;
+        border-radius: 50%;
+        background: #172b36;
+        cursor: pointer;
+        border: none;
+      }
+
+      .speed-value {
+        font-size: 11px;
+        color: #172b36;
+        min-width: 30px;
+        text-align: center;
+      }
+
       #score {
-        font-family: monospace;
-        margin-top: 30px;
+        margin-top: 15px;
         font-size: 16px;
-        padding-left: 20px;
         color: #172b36;
       }
 
-      #made {
+      #attribution {
         text-align: center;
         line-height: 1.5;
-        font-family: monospace;
         margin-top: auto;
         margin-bottom: 20px;
         font-size: 10px;
+        color: #172b36;
       }
 
-      #made a {
+      #attribution a {
         color: #172b36;
+      }
+
+      .ball-indicator {
+        width: 12px;
+        height: 12px;
+        border-radius: 50%;
+        margin-bottom: 5px;
+      }
+
+      .day-ball {
+        background: #114C5A;
+      }
+
+      .night-ball {
+        background: #D9E8E3;
+        border: 1px solid #114C5A;
       }
     </style>
   </head>
@@ -71,12 +149,61 @@
   <body>
     <div id="container">
       <canvas id="pongCanvas" width="600" height="600"></canvas>
+      
+      <div id="controls">
+        <div class="speed-control">
+          <div class="ball-indicator day-ball"></div>
+          <label class="day-label">Day Ball<br>Speed</label>
+          <input 
+            type="range" 
+            id="daySpeedSlider" 
+            class="speed-slider" 
+            min="1" 
+            max="30" 
+            value="8" 
+            step="0.5"
+          />
+          <div id="daySpeedValue" class="speed-value">8.0</div>
+        </div>
+        
+        <div class="speed-control">
+          <div class="ball-indicator night-ball"></div>
+          <label class="night-label">Night Ball<br>Speed</label>
+          <input 
+            type="range" 
+            id="nightSpeedSlider" 
+            class="speed-slider" 
+            min="1" 
+            max="30" 
+            value="8" 
+            step="0.5"
+          />
+          <div id="nightSpeedValue" class="speed-value">8.0</div>
+        </div>
+        
+        <div class="speed-control">
+          <button id="resetButton" style="
+            background: #172b36; 
+            color: white; 
+            border: none; 
+            padding: 8px 12px; 
+            border-radius: 4px; 
+            font-family: monospace; 
+            font-size: 11px; 
+            cursor: pointer;
+            margin-top: 20px;
+          ">Reset Game</button>
+        </div>
+      </div>
+
       <div id="score"></div>
-      <p id="made">
-        made by
-        <a href="https://koenvangilst.nl/labs/pong-wars">Koen van Gilst</a> | source on
-        <a href="https://github.com/vnglst/pong-wars">github</a>
-      </p>
+      <div id="attribution">
+        <strong>Source Code:</strong><br>
+        <a href="https://github.com/NursultanTilek/pong-wars" target="_blank">Koen van Gilst - Pong Wars</a><br>
+        <strong>Inspiration:</strong><br>
+        <a href="https://github.com/vnglst/pong-wars" target="_blank">Koen van Gilst - Pong Wars</a><br>
+        <strong>Speed Controls:</strong> Enhanced Version
+      </div>
     </div>
   </body>
 
@@ -102,8 +229,6 @@
     const NIGHT_COLOR = colorPalette.NocturnalExpedition;
     const NIGHT_BALL_COLOR = colorPalette.MysticMint;
     const SQUARE_SIZE = 25;
-    const MIN_SPEED = 5;
-    const MAX_SPEED = 10;
 
     const numSquaresX = canvas.width / SQUARE_SIZE;
     const numSquaresY = canvas.height / SQUARE_SIZE;
@@ -111,9 +236,17 @@
     let dayScore = 0;
     let nightScore = 0;
 
+    const daySpeedSlider = document.getElementById('daySpeedSlider');
+    const nightSpeedSlider = document.getElementById('nightSpeedSlider');
+    const daySpeedValue = document.getElementById('daySpeedValue');
+    const nightSpeedValue = document.getElementById('nightSpeedValue');
+    const resetButton = document.getElementById('resetButton');
+
+    let dayBallSpeed = 8;
+    let nightBallSpeed = 8;
+
     const squares = [];
 
-    // Populate the fields, one half day, one half night
     for (let i = 0; i < numSquaresX; i++) {
       squares[i] = [];
       for (let j = 0; j < numSquaresY; j++) {
@@ -129,6 +262,7 @@
         dy: -8,
         reverseColor: DAY_COLOR,
         ballColor: DAY_BALL_COLOR,
+        type: 'day'
       },
       {
         x: (canvas.width / 4) * 3,
@@ -137,10 +271,61 @@
         dy: 8,
         reverseColor: NIGHT_COLOR,
         ballColor: NIGHT_BALL_COLOR,
+        type: 'night'
       },
     ];
 
     let iteration = 0;
+
+    daySpeedSlider.addEventListener('input', function() {
+      dayBallSpeed = parseFloat(this.value);
+      daySpeedValue.textContent = dayBallSpeed.toFixed(1);
+      updateBallSpeed(balls[0], dayBallSpeed);
+    });
+
+    nightSpeedSlider.addEventListener('input', function() {
+      nightBallSpeed = parseFloat(this.value);
+      nightSpeedValue.textContent = nightBallSpeed.toFixed(1);
+      updateBallSpeed(balls[1], nightBallSpeed);
+    });
+
+    resetButton.addEventListener('click', function() {
+      resetGame();
+    });
+
+    function resetGame() {
+      for (let i = 0; i < numSquaresX; i++) {
+        for (let j = 0; j < numSquaresY; j++) {
+          squares[i][j] = i < numSquaresX / 2 ? DAY_COLOR : NIGHT_COLOR;
+        }
+      }
+      
+      balls[0].x = canvas.width / 4;
+      balls[0].y = canvas.height / 2;
+      balls[0].dx = dayBallSpeed * 0.7;
+      balls[0].dy = -dayBallSpeed * 0.7;
+      
+      balls[1].x = (canvas.width / 4) * 3;
+      balls[1].y = canvas.height / 2;
+      balls[1].dx = -nightBallSpeed * 0.7;
+      balls[1].dy = nightBallSpeed * 0.7;
+      
+      iteration = 0;
+    }
+
+    function updateBallSpeed(ball, targetSpeed) {
+      const currentSpeed = Math.sqrt(ball.dx * ball.dx + ball.dy * ball.dy);
+      
+      if (currentSpeed > 0.1) {
+        const ratio = targetSpeed / currentSpeed;
+        ball.dx *= ratio;
+        ball.dy *= ratio;
+      } else {
+        const angle = Math.random() * Math.PI * 2;
+        ball.dx = Math.cos(angle) * targetSpeed;
+        ball.dy = Math.sin(angle) * targetSpeed;
+      }
+    }
 
     function drawBall(ball) {
       ctx.beginPath();
@@ -159,7 +344,6 @@
           ctx.fillStyle = squares[i][j];
           ctx.fillRect(i * SQUARE_SIZE, j * SQUARE_SIZE, SQUARE_SIZE, SQUARE_SIZE);
 
-          // Update scores
           if (squares[i][j] === DAY_COLOR) dayScore++;
           if (squares[i][j] === NIGHT_COLOR) nightScore++;
         }
@@ -167,24 +351,37 @@
     }
 
     function checkSquareCollision(ball) {
-      // Check multiple points around the ball's circumference
-      for (let angle = 0; angle < Math.PI * 2; angle += Math.PI / 4) {
-        const checkX = ball.x + Math.cos(angle) * (SQUARE_SIZE / 2);
-        const checkY = ball.y + Math.sin(angle) * (SQUARE_SIZE / 2);
+      const speed = Math.sqrt(ball.dx * ball.dx + ball.dy * ball.dy);
+      const steps = Math.max(1, Math.ceil(speed / 5));
+      
+      for (let step = 0; step <= steps; step++) {
+        const stepRatio = step / steps;
+        const checkCenterX = ball.x - ball.dx * stepRatio;
+        const checkCenterY = ball.y - ball.dy * stepRatio;
+        
+        for (let angle = 0; angle < Math.PI * 2; angle += Math.PI / 4) {
+          const checkX = checkCenterX + Math.cos(angle) * (SQUARE_SIZE / 2);
+          const checkY = checkCenterY + Math.sin(angle) * (SQUARE_SIZE / 2);
 
-        const i = Math.floor(checkX / SQUARE_SIZE);
-        const j = Math.floor(checkY / SQUARE_SIZE);
+          const i = Math.floor(checkX / SQUARE_SIZE);
+          const j = Math.floor(checkY / SQUARE_SIZE);
 
-        if (i >= 0 && i < numSquaresX && j >= 0 && j < numSquaresY) {
-          if (squares[i][j] !== ball.reverseColor) {
-            // Square hit! Update square color
-            squares[i][j] = ball.reverseColor;
+          if (i >= 0 && i < numSquaresX && j >= 0 && j < numSquaresY) {
+            if (squares[i][j] !== ball.reverseColor) {
+              squares[i][j] = ball.reverseColor;
 
-            // Determine bounce direction based on the angle
-            if (Math.abs(Math.cos(angle)) > Math.abs(Math.sin(angle))) {
-              ball.dx = -ball.dx;
-            } else {
-              ball.dy = -ball.dy;
+              const centerX = (i + 0.5) * SQUARE_SIZE;
+              const centerY = (j + 0.5) * SQUARE_SIZE;
+              const diffX = ball.x - centerX;
+              const diffY = ball.y - centerY;
+              
+              if (Math.abs(diffX) > Math.abs(diffY)) {
+                ball.dx = -ball.dx;
+              } else {
+                ball.dy = -ball.dy;
+              }
+              
+              return;
             }
           }
         }
@@ -192,25 +389,50 @@
     }
 
     function checkBoundaryCollision(ball) {
-      if (ball.x + ball.dx > canvas.width - SQUARE_SIZE / 2 || ball.x + ball.dx < SQUARE_SIZE / 2) {
+      const radius = SQUARE_SIZE / 2;
+      
+      if (ball.x + ball.dx > canvas.width - radius || ball.x + ball.dx < radius) {
         ball.dx = -ball.dx;
+        ball.x = Math.max(radius, Math.min(canvas.width - radius, ball.x));
       }
-      if (ball.y + ball.dy > canvas.height - SQUARE_SIZE / 2 || ball.y + ball.dy < SQUARE_SIZE / 2) {
+      if (ball.y + ball.dy > canvas.height - radius || ball.y + ball.dy < radius) {
         ball.dy = -ball.dy;
+        ball.y = Math.max(radius, Math.min(canvas.height - radius, ball.y));
       }
     }
 
     function addRandomness(ball) {
-      ball.dx += Math.random() * 0.02 - 0.01;
-      ball.dy += Math.random() * 0.02 - 0.01;
+      const targetSpeed = ball.type === 'day' ? dayBallSpeed : nightBallSpeed;
+      const currentSpeed = Math.sqrt(ball.dx * ball.dx + ball.dy * ball.dy);
+      
+      if (iteration % 10 === 0) {
+        const randomnessFactor = Math.max(0.005, 0.02 / (targetSpeed / 8));
+        ball.dx += (Math.random() - 0.5) * randomnessFactor;
+        ball.dy += (Math.random() - 0.5) * randomnessFactor;
+      }
+      
+      if (Math.abs(currentSpeed - targetSpeed) > targetSpeed * 0.15) {
+        const adjustmentFactor = 0.02;
+        const ratio = 1 + (targetSpeed - currentSpeed) / currentSpeed * adjustmentFactor;
+        ball.dx *= ratio;
+        ball.dy *= ratio;
+      }
 
-      // Limit the speed of the ball
-      ball.dx = Math.min(Math.max(ball.dx, -MAX_SPEED), MAX_SPEED);
-      ball.dy = Math.min(Math.max(ball.dy, -MAX_SPEED), MAX_SPEED);
-
-      // Make sure the ball always maintains a minimum speed
-      if (Math.abs(ball.dx) < MIN_SPEED) ball.dx = ball.dx > 0 ? MIN_SPEED : -MIN_SPEED;
-      if (Math.abs(ball.dy) < MIN_SPEED) ball.dy = ball.dy > 0 ? MIN_SPEED : -MIN_SPEED;
+      const minSpeed = Math.max(0.5, targetSpeed * 0.3);
+      const currentSpeedAfter = Math.sqrt(ball.dx * ball.dx + ball.dy * ball.dy);
+      
+      if (currentSpeedAfter < minSpeed) {
+        const ratio = minSpeed / currentSpeedAfter;
+        ball.dx *= ratio;
+        ball.dy *= ratio;
+      }
+      
+      const maxSpeed = targetSpeed * 1.2;
+      if (currentSpeedAfter > maxSpeed) {
+        const ratio = maxSpeed / currentSpeedAfter;
+        ball.dx *= ratio;
+        ball.dy *= ratio;
+      }
     }
 
     function draw() {
@@ -233,7 +455,7 @@
       if (iteration % 1_000 === 0) console.log("iteration", iteration);
     }
 
-    const FRAME_RATE = 100;
+    const FRAME_RATE = 120;
     setInterval(draw, 1000 / FRAME_RATE);
   </script>
 </html>
